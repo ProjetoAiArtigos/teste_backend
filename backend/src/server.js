@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import db from './config/database.js';
+import db from './models/index.js';
+import authRoutes from './routes/auth.js';
 import tasksRoutes from './routes/tasks.js';
 
 dotenv.config();
@@ -9,6 +10,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
+
+// Rotas
+app.use('/auth', authRoutes);
 app.use('/tasks', tasksRoutes);
 
 (async () => {
@@ -16,6 +20,7 @@ app.use('/tasks', tasksRoutes);
         await db.sequelize.authenticate();
         console.log('Database connected successfully.');
 
+        // Sincronizar os modelos
         await db.sequelize.sync();
 
         app.listen(PORT, () => {
