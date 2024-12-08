@@ -4,9 +4,27 @@ class TaskController {
     static async getAllTasks(req, res) {
         try {
             const userId = req.user.id;
-            const tasks = await Task.findAll({ where: { userId } });
-            res.json(tasks);
+
+            const { page = 1, limit = 10 } = req.query;
+
+            const limitParsed = parseInt(limit, 10) || 10;
+            const pageParsed = parseInt(page, 10) || 1;
+            const offset = (pageParsed - 1) * limitParsed;
+
+            const { rows: tasks, count: total } = await Task.findAndCountAll({
+                where: { userId },
+                limit: limitParsed,
+                offset,
+            });
+
+            res.json({
+                tasks,
+                total,
+                page: pageParsed,
+                pages: Math.ceil(total / limitParsed),
+            });
         } catch (error) {
+            console.error('Error fetching tasks:', error);
             res.status(500).json({ error: 'Error fetching tasks' });
         }
     }
