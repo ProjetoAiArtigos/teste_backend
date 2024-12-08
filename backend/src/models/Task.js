@@ -6,15 +6,19 @@ export default class Task extends Model {
             {
                 title: {
                     type: DataTypes.STRING,
-                    allowNull: false,
+                    allowNull: false
                 },
                 description: {
-                    type: DataTypes.TEXT,
+                    type: DataTypes.TEXT
                 },
                 status: {
                     type: DataTypes.STRING,
-                    defaultValue: 'pending',
+                    defaultValue: 'pending'
                 },
+                userId: {
+                    type: DataTypes.INTEGER,
+                    field: 'user_id'
+                }
             },
             {
                 sequelize,
@@ -24,4 +28,9 @@ export default class Task extends Model {
             }
         );
     }
+
+    static associate(models) {
+        this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+    }
+
 }
