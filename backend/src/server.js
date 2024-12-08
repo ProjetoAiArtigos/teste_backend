@@ -1,21 +1,28 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import sequelize from './config/database.js';
+import db from './config/database.js';
+import tasksRoutes from './routes/tasks.js';
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+const PORT = process.env.PORT || 3001;
 
-// Conectar ao banco de dados
+app.use(express.json());
+app.use('/tasks', tasksRoutes);
+
 (async () => {
     try {
-        await sequelize.sync();
-        console.log('Database connected!');
-        app.listen(process.env.PORT, () => {
-            console.log(`Server running on http://localhost:${process.env.PORT}`);
+        await db.sequelize.authenticate();
+        console.log('Database connected successfully.');
+
+        // Sincronizar os modelos automaticamente
+        await db.sequelize.sync();
+
+        app.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
         });
     } catch (error) {
-        console.error('Unable to connect to the database:', error);
+        console.error('Failed to start the server:', error);
     }
 })();

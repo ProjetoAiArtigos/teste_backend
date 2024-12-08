@@ -6,13 +6,15 @@ WORKDIR /app
 
 # Copiar arquivos para o contêiner
 COPY package*.json ./
-COPY . .
 
 # Instalar dependências
 RUN npm install
 
+# Copiar demais arquivos para o contêiner
+COPY . .
+
 # Expor a porta do servidor
-EXPOSE 3000
+EXPOSE 3001
 
 # Comando para iniciar o servidor
 CMD ["npm", "start"]
