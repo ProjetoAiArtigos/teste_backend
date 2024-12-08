@@ -49,6 +49,28 @@ class TaskController {
             res.status(500).json({ error: 'Error deleting task' });
         }
     }
+
+    static async updateTaskStatus(req, res) {
+        try {
+            const { id } = req.params;
+            const { status } = req.body;
+
+            if (!status) {
+                return res.status(400).json({ error: 'Status is required' });
+            }
+
+            const task = await Task.findByPk(id);
+            if (!task) {
+                return res.status(404).json({ error: 'Task not found' });
+            }
+
+            await task.update({ status });
+            res.json({ message: 'Status updated successfully', task });
+        } catch (error) {
+            console.error('Error updating task status:', error);
+            res.status(500).json({ error: 'Error updating task status' });
+        }
+    }
 }
 
 export default TaskController;

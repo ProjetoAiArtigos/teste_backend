@@ -16,7 +16,6 @@ app.use('/tasks', tasksRoutes);
         await db.sequelize.authenticate();
         console.log('Database connected successfully.');
 
-        // Sincronizar os modelos automaticamente
         await db.sequelize.sync();
 
         app.listen(PORT, () => {
