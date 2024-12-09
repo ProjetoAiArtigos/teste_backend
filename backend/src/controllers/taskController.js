@@ -5,16 +5,21 @@ class TaskController {
         try {
             const userId = req.user.id;
 
-            const { page = 1, limit = 10 } = req.query;
+            const { page = 1, limit = 10, sortBy = 'createdAt', order = 'DESC', status, title } = req.query;
 
             const limitParsed = parseInt(limit, 10) || 10;
             const pageParsed = parseInt(page, 10) || 1;
             const offset = (pageParsed - 1) * limitParsed;
 
+            const filters = { userId };
+            if (status) filters.status = status;
+            if (title) filters.title = { [Sequelize.Op.like]: `%${title}%` }; // Filtro por título
+
             const { rows: tasks, count: total } = await Task.findAndCountAll({
-                where: { userId },
+                where: filters,
                 limit: limitParsed,
                 offset,
+                order: [[sortBy, order.toUpperCase()]],
             });
 
             res.json({
