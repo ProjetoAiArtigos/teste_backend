@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run migrate && nodemon src/server.js",
     "dev": "nodemon src/server.js",
-    "migrate": "npx sequelize-cli db:migrate --config src/config/config.js",
+    "migrate": "npx sequelize-cli db:migrate --config src/config/config.js --migrations-path src/migrations",
     "test": "JWT_SECRET=test_secret NODE_ENV=test npx jest"
   },
   "keywords": [],
