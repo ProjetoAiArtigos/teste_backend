@@ -23,6 +23,7 @@ app.get("/login", (req, res) => {
 		if (!results.length > 0) {
 			res.cookie("user_loged", false);
 			res.clearCookie("user_admin");
+			res.clearCookie("user_id");
 			return res.status(404).json({ error: "usuario não encontrado" });
 		}
 
