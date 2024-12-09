@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import TaskListPage from "./pages/TaskListPage";
 import TaskFormPage from "./pages/TaskFormPage";
 import AuthenticatedLayout from "./components/AuthenticatedLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
     const isAuthenticated = !!localStorage.getItem("authToken");
@@ -17,34 +18,36 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
 
-                {isAuthenticated && (
-                    <>
-                        <Route
-                            path="/tasks"
-                            element={
-                                <AuthenticatedLayout>
-                                    <TaskListPage />
-                                </AuthenticatedLayout>
-                            }
-                        />
-                        <Route
-                            path="/tasks/new"
-                            element={
-                                <AuthenticatedLayout>
-                                    <TaskFormPage />
-                                </AuthenticatedLayout>
-                            }
-                        />
-                        <Route
-                            path="/tasks/edit/:id"
-                            element={
-                                <AuthenticatedLayout>
-                                    <TaskFormPage />
-                                </AuthenticatedLayout>
-                            }
-                        />
-                    </>
-                )}
+                <Route
+                    path="/tasks"
+                    element={
+                        <ProtectedRoute>
+                            <AuthenticatedLayout>
+                                <TaskListPage />
+                            </AuthenticatedLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/tasks/new"
+                    element={
+                        <ProtectedRoute>
+                            <AuthenticatedLayout>
+                                <TaskFormPage />
+                            </AuthenticatedLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/tasks/edit/:id"
+                    element={
+                        <ProtectedRoute>
+                            <AuthenticatedLayout>
+                                <TaskFormPage />
+                            </AuthenticatedLayout>
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </Router>
     );

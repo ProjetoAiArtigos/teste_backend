@@ -19,11 +19,15 @@ const AuthMenu = () => {
             icon="pi pi-sign-out"
             className="p-button-danger p-button-outlined"
             onClick={() => {
-                localStorage.removeItem("authToken"); // Remove o token de autenticação
-                navigate("/login"); // Redireciona para a página de login
+                handleLogout();
             }}
         />
     );
+
+    const handleLogout = () => {
+        localStorage.removeItem("authToken");
+        navigate("/login");
+    };
 
     return <Menubar model={menuItems} start={start} end={end} />;
 };
