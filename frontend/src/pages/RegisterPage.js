@@ -3,7 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
-import {registerUser} from "../api/userApi";
+import {registerUser} from "../api/authApi";
 
 const RegisterPage = () => {
     const [name, setName] = useState("");
