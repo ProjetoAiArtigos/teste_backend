@@ -1,55 +1,43 @@
-# Desafio Técnico - Desenvolvimento de Aplicação
+# Gerenciados de Tarefas em node.js
 
-## **Descrição**
+Projeto para Gerenciar tarefas em um calendário.
 
-Desenvolver uma aplicação utilizando **Node.js** e **React.js**.
+## 💻 Pré-requisitos
 
----
+Para testar este projeto é necessário apenas docker. 
 
-## **Requisitos**
+## 🚀 Instalação e execução
 
-1. O sistema deverá implementar um **CRUD de Tarefas**:
-   - Permitir criar, visualizar, atualizar e deletar tarefas.
+Para instalar o projeto:
 
-2. **Persistência de Dados**:
-   - Utilizar um banco de dados SQL.
-   - A modelagem de dados será avaliada.
+```
+sudo docker compose -f "docker-compose.yml" up -d --build
+```
 
-3. **Boas Práticas de Design**:
-   - Estruturar a aplicação utilizando boas práticas de design de software.
-   - Código limpo, sem comentários desnecessários ou funções não utilizadas.
+Este arquivo irá criar um banco de dados Postgres, um servidor de cache com Redis, um Backend em NodeJS para a aplicação e um Frontend em React para interação.
 
-4. **Documentação**:
-   - Incluir um `README.md` com instruções claras de como executar o projeto.
+A documentação do Backend poderá ser encontrada em http://localhost:5000/docs e a aplicação será acessada por http://localhost:3000/
 
----
+## 🔐 Login e registro
 
-## **Desejável e Diferenciais**
+Ao acessar http://localhost:3000/ será redirecionado para a tela de login onde há um link também para a tela de registro. Para fins de teste apenas foi feita a validação se os dados não estão vazios.
 
-1. **Autenticação**:
-   - Implementação de um sistema de login e registro de usuários.
+![login](./assets/login.png)
 
-2. **Organização do Código**:
-   - Utilizar a arquitetura **MVC** ou uma estrutura similar (ex.: serviços e repositórios) para separar responsabilidades.
+![register](./assets/register.png)
 
-3. **Testes**:
-   - Implementação de testes unitários para validação do código.
+## 📆 Dashboard
 
----
+A Dashboard possui uma barra superior com um botão ícone de sair no canto superior direito e um botão ícone para alternar se usuário é administrador ou não. Este botão foi adicionado para testar a regra de roles do Backend e somente usuários administradores podem adicionar tarefas.
 
-## **Prazo Final**
+![dashboard](./assets/dashboard.png)
 
-O prazo para entrega do desafio é **segunda-feira, 9 de dezembro, às 19h**.
+Abaixo na dashboard há um formulário para adicionar tarefa que só é visivel se usuário for adiministrador e um calendário com as tarefas na sua data de vencimento. Ao clicar em uma tarefa um pequeno modal aparece com as informações da tarefa e no qual é possível marcar a tarefa como concluída e/ou deletá-la.
 
----
+## ⚠️ Observação
 
-## **Instruções de Entrega**
+Não foi possível implementar as seguintes ferramentas devido ao tempo:
 
-1. Faça um **pull request** no Git relacionado à tarefa do desafio.
-2. Envie um e-mail para **rh@redizz.com.br** com as seguintes informações:
-   - Comunicado de que o projeto foi finalizado.
-   - Um link de um vídeo hospedado no **YouTube** (opção **não listado**) contendo:
-     - Explicação sobre o código desenvolvido.
-     - Demonstração do software em operação.
-
-Boa sorte e sucesso no desenvolvimento!
+- Websocket para atualização em tempo real
+- Testes unitários utilizando o Jest
+- Validações de datas e outros campos
