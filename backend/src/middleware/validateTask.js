@@ -23,3 +23,18 @@ export const validateTask = [
         next();
     },
 ];
+
+export const validateTaskStatus = [
+    body('status')
+        .optional()
+        .isIn(['pending', 'in progress', 'completed'])
+        .withMessage('Status must be one of: pending, in progress, completed'),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+];

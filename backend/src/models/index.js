@@ -3,28 +3,33 @@ import { readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import config from "../config/config.js";
 
 dotenv.config();
 
-// Resolvendo o __dirname para ES Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+let __filename;
+let __dirname;
+
+try {
+    // Define __filename e __dirname para ES Modules
+    __filename = fileURLToPath(import.meta.url);
+    __dirname = dirname(__filename);
+} catch (err) {
+    // Fallback para ambientes onde import.meta.url não é suportado
+    __filename = '';
+    __dirname = '';
+}
 
 const models = {};
+const env = process.env.NODE_ENV || 'development';
+const dbConfig = config[env];
 
-// Configuração do Sequelize
-const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
-    {
-        host: process.env.DB_HOST,
-        dialect: 'mysql',
-        logging: false, // Desativa logs do Sequelize
-    }
-);
+const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
+    host: dbConfig.host,
+    dialect: dbConfig.dialect,
+    logging: dbConfig.logging,
+});
 
-// Carregar todos os modelos do diretório atual
 const modelFiles = readdirSync(__dirname).filter(
     (file) =>
         file.indexOf('.') !== 0 &&
@@ -38,7 +43,6 @@ for (const file of modelFiles) {
     models[model.name] = model.init(sequelize);
 }
 
-// Configurar associações (se houver)
 Object.values(models).forEach((model) => {
     if (model.associate) {
         model.associate(models);

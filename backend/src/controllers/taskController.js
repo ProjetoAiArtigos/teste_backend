@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import Task from '../models/Task.js';
 
 class TaskController {
@@ -13,7 +14,7 @@ class TaskController {
 
             const filters = { userId };
             if (status) filters.status = status;
-            if (title) filters.title = { [Sequelize.Op.like]: `%${title}%` }; // Filtro por título
+            if (title) filters.title = { [Op.like]: `%${title}%` };
 
             const { rows: tasks, count: total } = await Task.findAndCountAll({
                 where: filters,
@@ -29,7 +30,6 @@ class TaskController {
                 pages: Math.ceil(total / limitParsed),
             });
         } catch (error) {
-            console.error('Error fetching tasks:', error);
             res.status(500).json({ error: 'Error fetching tasks' });
         }
     }
@@ -93,12 +93,16 @@ class TaskController {
             }
 
             await task.update({ status });
-            res.json({ message: 'Status updated successfully', task });
+
+            const taskResponse = { id: task.id, status: task.status, userId: task.userId };
+
+            res.json({ message: 'Status updated successfully', task: taskResponse });
         } catch (error) {
             console.error('Error updating task status:', error);
             res.status(500).json({ error: 'Error updating task status' });
         }
     }
+
 }
 
 export default TaskController;
