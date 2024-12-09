@@ -16,6 +16,8 @@ Este projeto foi desenvolvido com o intuíto de participar do processo seletivo
 da **Redizz Tecnologia**, todo o projeto foi desenvolvido em NodeJS e Express
 por [@eduaki](https://github.com/eduaki).
 
+**[Video de apresentação no Youtube](https://youtu.be/hO-wP5xkxys)**
+
 ## Pré-requisitos
 
 - **Node.js e npm (ou yarn) instalados:** Certifique-se de ter o Node.js e o
