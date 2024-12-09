@@ -1,16 +1,14 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import TaskListPage from "./pages/TaskListPage";
 import TaskFormPage from "./pages/TaskFormPage";
-import AuthenticatedLayout from "./components/AuthenticatedLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AppLayout from "./layout/AppLayout";
 
-function App() {
-    const isAuthenticated = !!localStorage.getItem("authToken");
-
+const App = () => {
     return (
         <Router>
             <Routes>
@@ -22,9 +20,9 @@ function App() {
                     path="/tasks"
                     element={
                         <ProtectedRoute>
-                            <AuthenticatedLayout>
+                            <AppLayout>
                                 <TaskListPage />
-                            </AuthenticatedLayout>
+                            </AppLayout>
                         </ProtectedRoute>
                     }
                 />
@@ -32,9 +30,9 @@ function App() {
                     path="/tasks/new"
                     element={
                         <ProtectedRoute>
-                            <AuthenticatedLayout>
+                            <AppLayout>
                                 <TaskFormPage />
-                            </AuthenticatedLayout>
+                            </AppLayout>
                         </ProtectedRoute>
                     }
                 />
@@ -42,15 +40,15 @@ function App() {
                     path="/tasks/edit/:id"
                     element={
                         <ProtectedRoute>
-                            <AuthenticatedLayout>
+                            <AppLayout>
                                 <TaskFormPage />
-                            </AuthenticatedLayout>
+                            </AppLayout>
                         </ProtectedRoute>
                     }
                 />
             </Routes>
         </Router>
     );
-}
+};
 
 export default App;

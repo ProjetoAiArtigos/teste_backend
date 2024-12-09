@@ -1,74 +1,74 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { loginUser } from "../api/authApi";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
-import { Button } from "primereact/button";
-import { Card } from "primereact/card";
+import React, {useState} from "react";
+import {Button} from "primereact/button";
+import {InputText} from "primereact/inputtext";
+import {Password} from "primereact/password";
+import {Card} from "primereact/card";
+import {useNavigate} from "react-router-dom";
+import api from "../api/api";
+
+import "../styles/LoginPage.css";
 
 const LoginPage = () => {
-    const [formData, setFormData] = useState({ email: "", password: "" });
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = async () => {
-        if (!formData.email || !formData.password) {
-            setError("Preencha todos os campos.");
-            return;
-        }
-
-        setError(null);
-        setLoading(true);
-
+    const handleLogin = async (e) => {
+        e.preventDefault();
         try {
-            const response = await loginUser(formData);
-            const { token } = response.data;
-
-            localStorage.setItem("authToken", token);
-
-            navigate("/");
+            const response = await api.post("/auth/login", {email, password});
+            localStorage.setItem("authToken", response.data.token);
+            navigate("/tasks");
         } catch (err) {
-            const errorMessage = err.response?.data?.error || "Erro ao fazer login.";
-            setError(errorMessage);
-        } finally {
-            setLoading(false);
+            setError("Login falhou. Verifique suas credenciais.");
         }
     };
 
     return (
-        <div className="login-page">
-            <Card title="Login" style={{ maxWidth: "400px", margin: "2rem auto", padding: "1rem" }}>
-                {error && <p style={{ color: "red" }}>{error}</p>}
-
-                <div className="p-field">
-                    <label htmlFor="email">Email</label>
-                    <InputText
-                        id="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="Digite seu email"
-                    />
-                </div>
-
-                <div className="p-field">
-                    <label htmlFor="password">Senha</label>
-                    <Password
-                        id="password"
-                        value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        placeholder="Digite sua senha"
-                        feedback={false}
-                    />
-                </div>
-
+        <div className="login-container">
+            <Card title="Bem-vindo de volta!" className="login-card">
+                <p className="login-subtitle">Faça login para acessar sua conta.</p>
+                <form onSubmit={handleLogin}>
+                    <div className="p-field">
+                        <label htmlFor="email" className="block text-900 font-medium mb-2">E-mail</label>
+                        <InputText
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Digite seu e-mail"
+                            className="p-inputtext-md w-full mb-3"
+                            required
+                        />
+                    </div>
+                    <div className="p-field p-mt-3">
+                        <label htmlFor="password" className="block text-900 font-medium mb-2">Senha</label>
+                        <InputText
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            toggleMask
+                            placeholder="Digite sua senha"
+                            feedback={false}
+                            className="p-inputtext-md w-full mb-3"
+                            required
+                        />
+                    </div>
+                    {error && <p className="login-error">{error}</p>}
+                    <Button label="Entrar" type="submit" className="p-button-primary p-button-lg p-mt-4"
+                            style={{width: "100%"}}/>
+                </form>
+                <p className="login-footer">
+                    Não tem uma conta?{" "}
+                </p>
                 <Button
-                    label={loading ? "Carregando..." : "Entrar"}
-                    icon="pi pi-sign-in"
-                    onClick={handleLogin}
-                    disabled={loading}
-                    className="p-button-primary p-mt-3"
+                    label="Registrar-se"
+                    className="w-full"
+                    onClick={() => navigate("/register")}
                 />
+
             </Card>
         </div>
     );

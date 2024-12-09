@@ -1,90 +1,104 @@
 import React, { useState } from "react";
+import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
-import { Button } from "primereact/button";
-import { Toast } from "primereact/toast";
-import {registerUser} from "../api/authApi";
+import { Card } from "primereact/card";
+import { useNavigate } from "react-router-dom";
+import api from "../api/api";
+
+import "../styles/LoginPage.css";
 
 const RegisterPage = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState(null);
-    const toast = React.useRef(null);
+    const navigate = useNavigate();
 
-    const validateInputs = () => {
-        if (!name.trim()) return "O nome é obrigatório.";
-        if (!email.trim() || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) return "Digite um email válido.";
-        if (!password.trim() || password.length < 6) return "A senha deve ter pelo menos 6 caracteres.";
-        return null;
-    };
-
-    const handleRegister = async () => {
-        const validationError = validateInputs();
-        if (validationError) {
-            setError(validationError);
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        if (password !== confirmPassword) {
+            setError("As senhas não coincidem.");
             return;
         }
-
-        setLoading(true);
-        setError(null);
-
         try {
-            const userData = { name, email, password };
-            await registerUser(userData);
-            toast.current.show({ severity: "success", summary: "Sucesso", detail: "Registro concluído!" });
-
-            setTimeout(() => {
-                window.location.href = "/login";
-            }, 2000);
+            await api.post("/auth/register", { name, email, password });
+            navigate("/login");
         } catch (err) {
-            setError(err.message || "Erro ao registrar.");
-        } finally {
-            setLoading(false);
+            setError("Falha ao registrar. Tente novamente.");
         }
     };
 
     return (
-        <div className="form-container">
-            <Toast ref={toast} />
-            <h2>Registrar</h2>
-            {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
-            <div className="p-field">
-                <label htmlFor="name">Nome</label>
-                <InputText
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Digite seu nome"
-                />
-            </div>
-            <div className="p-field">
-                <label htmlFor="email">Email</label>
-                <InputText
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Digite seu email"
-                />
-            </div>
-            <div className="p-field">
-                <label htmlFor="password">Senha</label>
-                <Password
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    feedback={true}
-                    placeholder="Digite sua senha"
-                />
-            </div>
-            <Button
-                label={loading ? "Registrando..." : "Registrar"}
-                className="p-button-lg"
-                onClick={handleRegister}
-                disabled={loading}
-            />
-            <a href="/login">Já tem uma conta? Faça login</a>
+        <div className="register-container">
+            <Card title="Crie sua conta" className="register-card">
+                <p className="register-subtitle">Preencha os dados abaixo para começar.</p>
+                <form onSubmit={handleRegister}>
+                    <div>
+                        <label htmlFor="name" className="block text-900 font-medium mb-2">Nome</label>
+                        <InputText
+                            id="name"
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Digite seu nome"
+                            className="p-inputtext-md w-full mb-3"
+                            required
+                        />
+                    </div>
+                    <div className="p-field p-mt-3">
+                        <label htmlFor="email" className="block text-900 font-medium mb-2">E-mail</label>
+                        <InputText
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Digite seu e-mail"
+                            className="p-inputtext-md w-full mb-3"
+                            required
+                        />
+                    </div>
+                    <div className="p-field p-mt-3">
+                        <label htmlFor="password" className="block text-900 font-medium mb-2">Senha</label>
+                        <InputText
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            toggleMask
+                            placeholder="Digite sua senha"
+                            feedback={false}
+                            className="p-inputtext-md w-full mb-3"
+                            required
+                        />
+                    </div>
+                    <div className="p-field p-mt-3">
+                        <label htmlFor="confirmPassword" className="block text-900 font-medium mb-2">Confirme a Senha</label>
+                        <InputText
+                            type="password"
+                            id="confirmPassword"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            toggleMask
+                            placeholder="Confirme sua senha"
+                            feedback={false}
+                            className="p-inputtext-md w-full mb-3"
+                            required
+                        />
+                    </div>
+                    {error && <p className="register-error">{error}</p>}
+                    <Button label="Registrar" type="submit" className="p-button-primary p-button-lg p-mt-4" style={{ width: "100%" }} />
+                </form>
+                <p className="register-footer">
+                    Já tem uma conta?{" "}
+                    <Button
+                        label="Login"
+                        className="p-button-link"
+                        onClick={() => navigate("/login")}
+                    />
+                </p>
+            </Card>
         </div>
     );
 };
