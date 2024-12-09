@@ -14,10 +14,8 @@ const HomePage = () => {
 
     return (
         <div style={{ padding: "2rem" }}>
-            {/* Navbar */}
             <Menubar model={menuItems} start={header} />
 
-            {/* Hero Section */}
             <div style={{ textAlign: "center", marginTop: "3rem", marginBottom: "3rem" }}>
                 <h1 style={{ fontSize: "3rem", fontWeight: "bold" }}>Bem-vindo ao Sistema</h1>
                 <p style={{ fontSize: "1.5rem", marginBottom: "2rem", color: "#666" }}>
@@ -30,7 +28,6 @@ const HomePage = () => {
                 />
             </div>
 
-            {/* Destaques */}
             <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap" }}>
                 <div style={{ flex: "1 1 300px", maxWidth: "300px" }}>
                     <Card
@@ -61,7 +58,6 @@ const HomePage = () => {
                 </div>
             </div>
 
-            {/* Footer */}
             <footer style={{ textAlign: "center", marginTop: "4rem", padding: "1rem 0", backgroundColor: "#f5f5f5" }}>
                 <p style={{ margin: 0, color: "#888" }}>
                     © 2024 Sistema de Gerenciamento de Tarefas. Todos os direitos reservados.

@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { Dialog } from "primereact/dialog";
+import { Toast } from "primereact/toast";
 import { getTasks, deleteTask } from "../api/taskApi";
 import { useNavigate } from "react-router-dom";
-import { Toast } from "primereact/toast";
 
 const TaskListPage = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [taskToDelete, setTaskToDelete] = useState(null); // Task que será excluída
     const toast = React.useRef(null);
     const navigate = useNavigate();
 
@@ -24,11 +26,17 @@ const TaskListPage = () => {
         }
     };
 
-    const handleDelete = async (id) => {
+    const confirmDelete = (task) => {
+        setTaskToDelete(task);
+    };
+
+    const handleDelete = async () => {
+        if (!taskToDelete) return;
         try {
-            await deleteTask(id);
+            await deleteTask(taskToDelete.id);
             toast.current?.show({ severity: "success", summary: "Sucesso", detail: "Tarefa excluída com sucesso." });
-            fetchTasks(); // Atualizar lista
+            await fetchTasks();
+            setTaskToDelete(null);
         } catch (err) {
             toast.current?.show({ severity: "error", summary: "Erro", detail: "Não foi possível excluir a tarefa." });
         }
@@ -51,7 +59,7 @@ const TaskListPage = () => {
                     label="Excluir"
                     icon="pi pi-trash"
                     className="p-button-danger p-button-text"
-                    onClick={() => handleDelete(rowData.id)}
+                    onClick={() => confirmDelete(rowData)}
                 />
             </div>
         );
@@ -73,6 +81,32 @@ const TaskListPage = () => {
                 <Column field="status" header="Status" />
                 <Column body={actionBodyTemplate} header="Ações" />
             </DataTable>
+
+            <Dialog
+                visible={!!taskToDelete}
+                style={{ width: "450px" }}
+                header="Confirmar Exclusão"
+                modal
+                footer={
+                    <>
+                        <Button
+                            label="Não"
+                            icon="pi pi-times"
+                            className="p-button-text"
+                            onClick={() => setTaskToDelete(null)}
+                        />
+                        <Button
+                            label="Sim"
+                            icon="pi pi-check"
+                            className="p-button-danger"
+                            onClick={handleDelete}
+                        />
+                    </>
+                }
+                onHide={() => setTaskToDelete(null)}
+            >
+                <p>Tem certeza de que deseja excluir a tarefa <strong>{taskToDelete?.title}</strong>?</p>
+            </Dialog>
         </div>
     );
 };
