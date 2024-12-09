@@ -1,0 +1,121 @@
+/* Paleta de cores */
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #FF9800;
+    --background-color: #F5F5F5;
+    --text-color: #212121;
+    --subtext-color: #757575;
+    --highlight-color: #FFC107;
+}
+
+/* Estilo geral */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.p-menubar {
+    background-color: var(--primary-color) !important;
+    border: none;
+    box-shadow: none;
+}
+
+.p-menubar .p-menuitem-link {
+    color: #FFFFFF !important;
+}
+
+/* Botões */
+.p-button {
+    background-color: var(--primary-color) !important;
+    border: none;
+}
+
+.p-button:hover {
+    background-color: var(--highlight-color) !important;
+    color: #212121 !important;
+}
+
+/* Cards */
+.p-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--secondary-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.p-card-title {
+    color: var(--primary-color);
+}
+
+.p-card-subtitle {
+    color: var(--subtext-color);
+}
+
+/* Rodapé */
+footer {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    padding: 1rem 0;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #FFFFFF;
+    padding: 4rem 1rem;
+}
+
+.hero-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Formulário Geral */
+.form-container {
+    max-width: 400px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos do Formulário */
+.form-container h2 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+/* Inputs e Botões */
+.p-inputtext {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.p-button {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Links */
+.form-container a {
+    color: var(--primary-color);
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.form-container a:hover {
+    text-decoration: underline;
+}
