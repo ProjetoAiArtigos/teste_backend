@@ -25,7 +25,7 @@ const AppLayout = ({ children }) => {
             icon: "pi pi-sign-out",
             command: () => {
                 localStorage.removeItem("authToken");
-                window.location.href = "/login";
+                window.location.href = "/";
             },
         },
     ];
