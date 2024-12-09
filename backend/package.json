@@ -4,10 +4,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "npm run migrate && nodemon src/server.js",
-    "dev": "nodemon src/server.js",
+    "start": "NODE_ENV=production npm run migrate && nodemon src/server.js",
+    "dev": "NODE_ENV=development nodemon src/server.js",
     "migrate": "npx sequelize-cli db:migrate --config src/config/config.js --migrations-path src/migrations",
-    "test": "JWT_SECRET=test_secret NODE_ENV=test npx jest"
+    "test": "NODE_ENV=test JWT_SECRET=test_secret npm run migrate:test && npx jest",
+    "migrate:test": "NODE_ENV=test npx sequelize-cli db:migrate --env test --config src/config/config.js --migrations-path src/migrations"
   },
   "keywords": [],
   "author": "",

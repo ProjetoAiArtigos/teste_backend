@@ -1,5 +1,5 @@
-import { jest } from '@jest/globals';
-import { Op } from 'sequelize';
+import {jest} from '@jest/globals';
+import {Op} from 'sequelize';
 import TaskController from '../../src/controllers/taskController.js';
 import Task from '../../src/models/Task.js';
 
@@ -22,8 +22,8 @@ describe('TaskController', () => {
         jest.clearAllMocks();
 
         mockReq = {
-            user: { id: 1 },
-            query: { page: 1, limit: 10 },
+            user: {id: 1},
+            query: {page: 1, limit: 10},
             body: {},
             params: {},
         };
@@ -37,20 +37,20 @@ describe('TaskController', () => {
 
     it('deve retornar todas as tarefas do usuário', async () => {
         Task.findAndCountAll.mockResolvedValue({
-            rows: [{ id: 1, title: 'Task 1' }],
+            rows: [{id: 1, title: 'Task 1'}],
             count: 1,
         });
 
         await TaskController.getAllTasks(mockReq, mockRes);
 
         expect(Task.findAndCountAll).toHaveBeenCalledWith({
-            where: { userId: 1 },
+            where: {userId: 1},
             limit: 10,
             offset: 0,
             order: [['createdAt', 'DESC']],
         });
         expect(mockRes.json).toHaveBeenCalledWith({
-            tasks: [{ id: 1, title: 'Task 1' }],
+            tasks: [{id: 1, title: 'Task 1'}],
             total: 1,
             page: 1,
             pages: 1,
@@ -58,8 +58,8 @@ describe('TaskController', () => {
     });
 
     it('deve criar uma nova tarefa para o usuário', async () => {
-        const newTask = { id: 2, title: 'New Task', userId: 1 };
-        mockReq.body = { title: 'New Task', description: 'Description' };
+        const newTask = {id: 2, title: 'New Task', userId: 1};
+        mockReq.body = {title: 'New Task', description: 'Description'};
         Task.create.mockResolvedValue(newTask);
 
         await TaskController.createTask(mockReq, mockRes);
@@ -78,6 +78,8 @@ describe('TaskController', () => {
         const mockTask = {
             id: 1,
             title: 'Old Title',
+            description: 'Task description',
+            status: 'pending',
             userId: 1,
             update: jest.fn().mockImplementation((changes) => {
                 Object.assign(mockTask, changes);
@@ -86,26 +88,30 @@ describe('TaskController', () => {
         };
 
         mockReq.params.id = 1;
-        mockReq.body = { title: 'Updated Task' };
+        mockReq.body = {title: 'Updated Task', description: 'Task description', status: 'pending'};
         Task.findOne.mockResolvedValue(mockTask);
 
         await TaskController.updateTask(mockReq, mockRes);
 
-        expect(Task.findOne).toHaveBeenCalledWith({ where: { id: 1, userId: 1 } });
-        expect(mockTask.update).toHaveBeenCalledWith({ title: 'Updated Task' });
+        expect(Task.findOne).toHaveBeenCalledWith({where: {id: 1, userId: 1}});
+        expect(mockTask.update).toHaveBeenCalledWith({
+            title: 'Updated Task',
+            description: 'Task description',
+            status: 'pending'
+        });
         expect(mockRes.json).toHaveBeenCalledWith(mockTask);
     });
 
     it('deve retornar erro 404 se a tarefa não for encontrada ao atualizar', async () => {
         mockReq.params.id = 999;
-        mockReq.body = { title: 'Nonexistent Task' };
+        mockReq.body = {title: 'Nonexistent Task'};
         Task.findOne.mockResolvedValue(null);
 
         await TaskController.updateTask(mockReq, mockRes);
 
-        expect(Task.findOne).toHaveBeenCalledWith({ where: { id: 999, userId: 1 } });
+        expect(Task.findOne).toHaveBeenCalledWith({where: {id: 999, userId: 1}});
         expect(mockRes.status).toHaveBeenCalledWith(404);
-        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Task not found' });
+        expect(mockRes.json).toHaveBeenCalledWith({error: 'Task not found'});
     });
 
     it('deve excluir uma tarefa do usuário', async () => {
@@ -118,7 +124,7 @@ describe('TaskController', () => {
 
         await TaskController.deleteTask(mockReq, mockRes);
 
-        expect(Task.findOne).toHaveBeenCalledWith({ where: { id: 1, userId: 1 } });
+        expect(Task.findOne).toHaveBeenCalledWith({where: {id: 1, userId: 1}});
         expect(mockTask.destroy).toHaveBeenCalled();
         expect(mockRes.status).toHaveBeenCalledWith(204);
         expect(mockRes.send).toHaveBeenCalled();
@@ -130,9 +136,9 @@ describe('TaskController', () => {
 
         await TaskController.deleteTask(mockReq, mockRes);
 
-        expect(Task.findOne).toHaveBeenCalledWith({ where: { id: 999, userId: 1 } });
+        expect(Task.findOne).toHaveBeenCalledWith({where: {id: 999, userId: 1}});
         expect(mockRes.status).toHaveBeenCalledWith(404);
-        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Task not found' });
+        expect(mockRes.json).toHaveBeenCalledWith({error: 'Task not found'});
     });
 
     it('deve retornar erro 500 em caso de falha ao excluir', async () => {
@@ -142,14 +148,14 @@ describe('TaskController', () => {
         await TaskController.deleteTask(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(500);
-        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Error deleting task' });
+        expect(mockRes.json).toHaveBeenCalledWith({error: 'Error deleting task'});
     });
 
     it('deve filtrar tarefas por título', async () => {
         mockReq.query.title = 'Task 1';
 
         Task.findAndCountAll.mockResolvedValue({
-            rows: [{ id: 1, title: 'Task 1' }],
+            rows: [{id: 1, title: 'Task 1'}],
             count: 1,
         });
 
@@ -158,14 +164,14 @@ describe('TaskController', () => {
         expect(Task.findAndCountAll).toHaveBeenCalledWith({
             where: {
                 userId: 1,
-                title: { [Op.like]: '%Task 1%' },
+                title: {[Op.like]: '%Task 1%'},
             },
             limit: 10,
             offset: 0,
             order: [['createdAt', 'DESC']],
         });
         expect(mockRes.json).toHaveBeenCalledWith({
-            tasks: [{ id: 1, title: 'Task 1' }],
+            tasks: [{id: 1, title: 'Task 1'}],
             total: 1,
             page: 1,
             pages: 1,
@@ -184,30 +190,30 @@ describe('TaskController', () => {
         };
 
         mockReq.params.id = 1;
-        mockReq.body = { status: 'completed' };
+        mockReq.body = {status: 'completed'};
 
         Task.findOne.mockResolvedValue(mockTask);
 
         await TaskController.updateTaskStatus(mockReq, mockRes);
 
-        expect(Task.findOne).toHaveBeenCalledWith({ where: { id: 1, userId: 1 } });
-        expect(mockTask.update).toHaveBeenCalledWith({ status: 'completed' });
+        expect(Task.findOne).toHaveBeenCalledWith({where: {id: 1, userId: 1}});
+        expect(mockTask.update).toHaveBeenCalledWith({status: 'completed'});
 
         expect(mockRes.json).toHaveBeenCalledWith({
             message: 'Status updated successfully',
-            task: { id: 1, status: 'completed', userId: 1 },
+            task: {id: 1, status: 'completed', userId: 1},
         });
     });
 
     it('deve retornar erro 404 se a tarefa não for encontrada ao atualizar status', async () => {
         mockReq.params.id = 999;
-        mockReq.body = { status: 'completed' };
+        mockReq.body = {status: 'completed'};
 
         Task.findOne.mockResolvedValue(null);
 
         await TaskController.updateTaskStatus(mockReq, mockRes);
 
-        expect(Task.findOne).toHaveBeenCalledWith({ where: { id: 999, userId: 1 } });
+        expect(Task.findOne).toHaveBeenCalledWith({where: {id: 999, userId: 1}});
         expect(mockRes.status).toHaveBeenCalledWith(404);
         expect(mockRes.json).toHaveBeenCalledWith({
             error: 'Task not found or not owned by the user',
@@ -221,6 +227,6 @@ describe('TaskController', () => {
         await TaskController.updateTaskStatus(mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(400);
-        expect(mockRes.json).toHaveBeenCalledWith({ error: 'Status is required' });
+        expect(mockRes.json).toHaveBeenCalledWith({error: 'Status is required'});
     });
 });
