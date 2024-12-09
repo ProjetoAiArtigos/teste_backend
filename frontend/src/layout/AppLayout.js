@@ -5,21 +5,18 @@ import { PanelMenu } from "primereact/panelmenu";
 const AppLayout = ({ children }) => {
     const sidebarMenuItems = [
         {
-            label: "Tarefas",
+            label: "Listar Tarefas",
             icon: "pi pi-list",
-            items: [
-                { label: "Listar Tarefas", icon: "pi pi-table", command: () => (window.location.href = "/tasks") },
-                { label: "Nova Tarefa", icon: "pi pi-plus", command: () => (window.location.href = "/tasks/new") },
-            ],
+            command: () => (window.location.href = "/tasks")
+        },
+        {
+            label: "Nova Tarefa",
+            icon: "pi pi-plus",
+            command: () => (window.location.href = "/tasks/new")
         }
     ];
 
     const topMenuItems = [
-        {
-            label: "Perfil",
-            icon: "pi pi-user",
-            command: () => (window.location.href = "/profile"),
-        },
         {
             label: "Logout",
             icon: "pi pi-sign-out",

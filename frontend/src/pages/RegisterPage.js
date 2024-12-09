@@ -65,6 +65,7 @@ const RegisterPage = () => {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            minLength="6"
                             toggleMask
                             placeholder="Digite sua senha"
                             feedback={false}
@@ -79,6 +80,7 @@ const RegisterPage = () => {
                             id="confirmPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
+                            minLength="6"
                             toggleMask
                             placeholder="Confirme sua senha"
                             feedback={false}
@@ -93,7 +95,7 @@ const RegisterPage = () => {
                     Já tem uma conta?{" "}
                     <Button
                         label="Login"
-                        className="p-button-link"
+                        className="p-button-primary p-button-sm p-mt-4"
                         onClick={() => navigate("/login")}
                     />
                 </p>
