@@ -2,6 +2,21 @@ import { Op } from 'sequelize';
 import Task from '../models/Task.js';
 
 class TaskController {
+    static async getTask(req, res) {
+        try {
+            const { id } = req.params;
+            const userId = req.user.id;
+            const task = await Task.findOne({ where: { id, userId } });
+            if (!task) {
+                return res.status(404).json({ error: 'Task not found' });
+            }
+
+            res.json(task);
+        } catch (error) {
+            res.status(500).json({ error: 'Error fetching tasks' });
+        }
+    }
+
     static async getAllTasks(req, res) {
         try {
             const userId = req.user.id;

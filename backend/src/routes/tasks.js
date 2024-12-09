@@ -9,8 +9,9 @@ const router = express.Router();
 router.use(authenticate);
 
 router.get('/', validateQuery, TaskController.getAllTasks);
+router.get('/:id', validateQuery, TaskController.getTask);
 router.post('/', validateTask, TaskController.createTask);
-router.patch('/:id', validateTask, TaskController.updateTask);
+router.put('/:id', validateTask, TaskController.updateTask);
 router.delete('/:id', TaskController.deleteTask);
 router.patch('/:id/status', validateTaskStatus, TaskController.updateTaskStatus);
 
