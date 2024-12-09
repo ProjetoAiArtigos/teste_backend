@@ -1,0 +1,48 @@
+import React from "react";
+import { Menubar } from "primereact/menubar";
+import { PanelMenu } from "primereact/panelmenu";
+
+const AppLayout = ({ children }) => {
+    const sidebarMenuItems = [
+        {
+            label: "Listar Tarefas",
+            icon: "pi pi-list",
+            command: () => (window.location.href = "/tasks")
+        },
+        {
+            label: "Nova Tarefa",
+            icon: "pi pi-plus",
+            command: () => (window.location.href = "/tasks/new")
+        }
+    ];
+
+    const topMenuItems = [
+        {
+            label: "Logout",
+            icon: "pi pi-sign-out",
+            command: () => {
+                localStorage.removeItem("authToken");
+                window.location.href = "/";
+            },
+        },
+    ];
+
+    return (
+        <div className="app-layout">
+            {/* Sidebar */}
+            <div className="sidebar p-d-none p-d-md-block">
+                <PanelMenu model={sidebarMenuItems} style={{ width: "100%" }} />
+            </div>
+
+            {/* Content Area */}
+            <div className="main-content">
+                <Menubar model={topMenuItems} className="p-mb-3" />
+
+                {/* Main Content */}
+                <div className="content-container p-3">{children}</div>
+            </div>
+        </div>
+    );
+};
+
+export default AppLayout;
