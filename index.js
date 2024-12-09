@@ -182,7 +182,7 @@ app.post("/users", (req, res) => {
 	/// adiciona um usuário ao banco de dados
 	const { name, mail, password, isAdmin } = req.body;
 
-	if (!name || !mail || !password || isAdmin == null) {
+	if (!name || !mail || !password) {
 		return res.status(400).json({ error: "campo obrigatório vazio" });
 	}
 
@@ -201,7 +201,13 @@ app.post("/users", (req, res) => {
 		return res.status(400).json({ error: "isAdmin é booleano" });
 	}
 
-	const sqlScript = `INSERT INTO users (user_name, user_mail, user_password, isAdmin) VALUES (?, ?, ?, ?)`;
+	let sqlScript;
+	if (isAdmin == null) {
+		sqlScript = `INSERT INTO users (user_name, user_mail, user_password) VALUES (?, ?, ?)`;
+	} else {
+		sqlScript = `INSERT INTO users (user_name, user_mail, user_password, isAdmin) VALUES (?, ?, ?, ?)`;
+	}
+
 	db.query(sqlScript, [name, mail, password, isAdmin], (err, results) => {
 		if (err) {
 			if (err.code === "ER_DUP_ENTRY")
